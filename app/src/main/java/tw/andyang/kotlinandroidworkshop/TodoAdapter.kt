@@ -4,15 +4,25 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_todo.view.*
 
-class TodoAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TodoAdapter : ListAdapter<Todo, RecyclerView.ViewHolder>(
+    object : DiffUtil.ItemCallback<Todo>() {
+        override fun areItemsTheSame(oldItem: Todo, newItem: Todo): Boolean {
+            return oldItem.viewType == newItem.viewType
+        }
 
-    private var todos = listOf<Todo>()
+        override fun areContentsTheSame(oldItem: Todo, newItem: Todo): Boolean {
+            return oldItem == newItem
+        }
+    }
+) {
 
     override fun getItemViewType(position: Int): Int {
-        return todos[position].viewType
+        return getItem(position).viewType
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -22,20 +32,11 @@ class TodoAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    override fun getItemCount(): Int {
-        return todos.size
-    }
-
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (val todo = todos[position]) {
+        when (val todo = getItem(position)) {
             is Todo.Title -> (holder as TodoTitleViewHolder).bind(todo)
             is Todo.Item -> (holder as TodoViewHolder).bind(todo)
         }
-    }
-
-    fun refresh(todos: List<Todo>) {
-        this.todos = todos
-        notifyDataSetChanged()
     }
 }
 

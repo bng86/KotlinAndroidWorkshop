@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">KotlinAndroidWorkshop</string>
     <string name="todo_list_title">備忘錄</string>
+    <string name="add_todo">新增</string>
 </resources>
