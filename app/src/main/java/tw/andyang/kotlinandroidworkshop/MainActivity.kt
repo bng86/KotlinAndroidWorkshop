@@ -2,13 +2,13 @@ package tw.andyang.kotlinandroidworkshop
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-
-    private var todos = listOf<Todo>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,17 +19,13 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
 
-        todos = todos.toMutableList().apply {
-            add(Todo.Title(getString(R.string.todo_list_title)))
-        }
+        val todoViewModel = ViewModelProvider(this).get<TodoViewModel>()
 
-        adapter.submitList(todos)
+        adapter.submitList(todoViewModel.todos)
 
         buttonAdd.setOnClickListener {
-            todos = todos.toMutableList().apply {
-                add(Todo.Item("world", false))
-            }
-            adapter.submitList(todos)
+            todoViewModel.addNewTodo()
+            adapter.submitList(todoViewModel.todos)
         }
     }
 }
