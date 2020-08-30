@@ -2,6 +2,7 @@ package tw.andyang.kotlinandroidworkshop
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -21,11 +22,12 @@ class MainActivity : AppCompatActivity() {
 
         val todoViewModel = ViewModelProvider(this).get<TodoViewModel>()
 
-        adapter.submitList(todoViewModel.todos)
+        todoViewModel.todoLiveData.observe(this, Observer { todos: List<Todo> ->
+            adapter.submitList(todos)
+        })
 
         buttonAdd.setOnClickListener {
             todoViewModel.addNewTodo()
-            adapter.submitList(todoViewModel.todos)
         }
     }
 }
