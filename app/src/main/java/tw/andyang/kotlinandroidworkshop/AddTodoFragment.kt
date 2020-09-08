@@ -9,9 +9,12 @@ import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import kotlinx.android.synthetic.main.fragment_add_todo.*
 
 class AddTodoFragment : Fragment() {
+
+    private val args by navArgs<AddTodoFragmentArgs>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -24,14 +27,18 @@ class AddTodoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // auto open soft keyboard
         editTodo.requestFocus()
-
         val inputMethodManager =
             requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.toggleSoftInput(
             InputMethodManager.SHOW_FORCED,
             InputMethodManager.HIDE_IMPLICIT_ONLY
         )
+
+        // setup argument
+        editTodo.setText(args.memo)
+        editTodo.setSelection(args.memo.length)
 
         val todoViewModel = ViewModelProvider(requireActivity()).get(TodoViewModel::class.java)
 

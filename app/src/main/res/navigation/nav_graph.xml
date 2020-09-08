@@ -21,6 +21,13 @@
     <fragment
         android:id="@+id/addTodoFragment"
         android:name="tw.andyang.kotlinandroidworkshop.AddTodoFragment"
-        tools:layout="@layout/fragment_add_todo" />
+        tools:layout="@layout/fragment_add_todo">
+
+        <argument
+            android:name="memo"
+            android:defaultValue="是在哈囉？"
+            app:argType="string" />
+
+    </fragment>
 
 </navigation>
