@@ -7,16 +7,13 @@ import androidx.lifecycle.ViewModel
 
 class TodoViewModel : ViewModel() {
 
-    val onNewTodo = MutableLiveData<Unit>()
+    val onNewTodo = MutableLiveData<String>()
 
     val todoLiveData: LiveData<List<Todo>> = MediatorLiveData<List<Todo>>().apply {
-        addSource(onNewTodo) {
-            val todo = Todo.Item("note $count", false)
+        addSource(onNewTodo) { text ->
+            val todo = Todo.Item(text, false)
             this.value = this.value!! + listOf(todo)
-            count++
         }
         value = mutableListOf(Todo.Title("This is a title"))
     }
-
-    private var count = 0
 }
