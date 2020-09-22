@@ -8,8 +8,14 @@
 
     <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@+id/checkbox"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         tools:text="Memo" />
+
+    <TextView android:id="@+id/create_at"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="2020-09-23 12:34:56"/>
 
 </LinearLayout>

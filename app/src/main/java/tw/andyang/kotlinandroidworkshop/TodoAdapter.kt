@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_todo.view.*
+import java.text.SimpleDateFormat
 
 class TodoAdapter : ListAdapter<Todo, RecyclerView.ViewHolder>(
     object : DiffUtil.ItemCallback<Todo>() {
@@ -47,6 +48,7 @@ class TodoViewHolder(parent: ViewGroup, private val onTodoChangeListener: OnTodo
 ) {
 
     private val checkbox: AppCompatCheckBox = itemView.checkbox
+    private val date = itemView.create_at
 
     fun bind(todo: Todo.Item) {
         checkbox.text = todo.memo
@@ -54,6 +56,8 @@ class TodoViewHolder(parent: ViewGroup, private val onTodoChangeListener: OnTodo
         checkbox.setOnClickListener { view ->
             onTodoChangeListener?.onChange(Todo.Item(todo.id, todo.memo, !todo.checked, todo.createdAt))
         }
+
+        date.text = SimpleDateFormat.getDateTimeInstance().format(todo.createdAt)
     }
 
 }
