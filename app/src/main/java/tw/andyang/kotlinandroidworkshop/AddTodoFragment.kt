@@ -57,7 +57,8 @@ class AddTodoFragment : Fragment() {
                 // clear error
                 editTodo.error = null
                 // post data to view model
-                todoViewModel.onNewTodo.postValue(editTodo.text.toString())
+                val title = editTodo.text.toString()
+                todoViewModel.createNewTodo(title)
                 // hide soft keyboard when item added
                 view.clearFocus()
                 inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)

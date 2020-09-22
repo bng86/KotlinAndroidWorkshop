@@ -7,4 +7,7 @@ import tw.andyang.kotlinandroidworkshop.database.TodoItem
 class TodoItemRepository(
     private val database: AppDatabase
 ) {
+    fun insertTodoItem(todoItem: TodoItem) {
+        database.todoItemDao().insert(todoItem)
+    }
 }
