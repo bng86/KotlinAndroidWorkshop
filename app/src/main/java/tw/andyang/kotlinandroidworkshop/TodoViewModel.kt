@@ -1,9 +1,6 @@
 package tw.andyang.kotlinandroidworkshop
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 import tw.andyang.kotlinandroidworkshop.database.TodoItem
 import tw.andyang.kotlinandroidworkshop.repository.TodoItemRepository
@@ -11,14 +8,24 @@ import java.util.*
 
 class TodoViewModel(private val repository: TodoItemRepository) : ViewModel() {
 
-    val onNewTodo = MutableLiveData<String>()
+    private val title = Todo.Title("This is a title")
 
     val todoLiveData: LiveData<List<Todo>> = MediatorLiveData<List<Todo>>().apply {
-        addSource(onNewTodo) { text ->
-            val todo = Todo.Item(text, false)
-            this.value = this.value!! + listOf(todo)
+        val source = repository.getTodoItems().map {
+            it.map { todoItem ->
+                Todo.Item(
+                    todoItem.id,
+                    todoItem.title,
+                    todoItem.done,
+                    todoItem.createdAt
+                )
+            }
         }
-        value = mutableListOf(Todo.Title("This is a title"))
+        addSource(source) {
+            this.value = mutableListOf(title) + it
+        }
+        value = mutableListOf(title)
+    }
 
     fun createNewTodo(title: String) {
         val todoItem = TodoItem(

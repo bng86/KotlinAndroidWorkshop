@@ -10,4 +10,8 @@ class TodoItemRepository(
     suspend fun insertTodoItem(todoItem: TodoItem) {
         database.todoItemDao().insert(todoItem)
     }
+
+    fun getTodoItems(): LiveData<List<TodoItem>> {
+        return database.todoItemDao().findAll()
+    }
 }
