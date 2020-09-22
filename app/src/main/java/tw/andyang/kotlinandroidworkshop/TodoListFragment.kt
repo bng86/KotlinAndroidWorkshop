@@ -11,6 +11,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_todo_list.*
+import tw.andyang.kotlinandroidworkshop.database.AppDatabase
+import tw.andyang.kotlinandroidworkshop.mvvm.AnyViewModelFactory
+import tw.andyang.kotlinandroidworkshop.repository.TodoItemRepository
 
 class TodoListFragment : Fragment() {
 
@@ -36,7 +39,12 @@ class TodoListFragment : Fragment() {
             )
         )
 
-        val todoViewModel = ViewModelProvider(requireActivity()).get(TodoViewModel::class.java)
+        val todoItemDb = AppDatabase.getInstance(requireActivity().applicationContext)
+        val todoItemRepo = TodoItemRepository(todoItemDb)
+        val viewModelFactory = AnyViewModelFactory {
+            TodoViewModel(todoItemRepo)
+        }
+        val todoViewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(TodoViewModel::class.java)
 
         todoViewModel.todoLiveData.observe(viewLifecycleOwner, Observer { todos: List<Todo> ->
             adapter.submitList(todos)

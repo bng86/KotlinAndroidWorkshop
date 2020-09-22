@@ -11,6 +11,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import kotlinx.android.synthetic.main.fragment_add_todo.*
+import tw.andyang.kotlinandroidworkshop.database.AppDatabase
+import tw.andyang.kotlinandroidworkshop.mvvm.AnyViewModelFactory
+import tw.andyang.kotlinandroidworkshop.repository.TodoItemRepository
 
 class AddTodoFragment : Fragment() {
 
@@ -40,7 +43,12 @@ class AddTodoFragment : Fragment() {
         editTodo.setText(args.memo)
         editTodo.setSelection(args.memo.length)
 
-        val todoViewModel = ViewModelProvider(requireActivity()).get(TodoViewModel::class.java)
+        val todoItemDb = AppDatabase.getInstance(requireActivity().applicationContext)
+        val todoItemRepo = TodoItemRepository(todoItemDb)
+        val viewModelFactory = AnyViewModelFactory {
+            TodoViewModel(todoItemRepo)
+        }
+        val todoViewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(TodoViewModel::class.java)
 
         buttonAdd.setOnClickListener {
             if (editTodo.text.isNullOrEmpty()) {
