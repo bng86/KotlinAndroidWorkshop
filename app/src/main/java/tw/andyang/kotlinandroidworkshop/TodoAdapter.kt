@@ -21,6 +21,8 @@ class TodoAdapter : ListAdapter<Todo, RecyclerView.ViewHolder>(
     }
 ) {
 
+    var onTodoChangeListener: OnTodoChangeListener? = null
+
     override fun getItemViewType(position: Int): Int {
         return getItem(position).viewType
     }
@@ -28,7 +30,7 @@ class TodoAdapter : ListAdapter<Todo, RecyclerView.ViewHolder>(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             Todo.TYPE_TITLE -> TodoTitleViewHolder(parent)
-            else -> TodoViewHolder(parent)
+            else -> TodoViewHolder(parent, onTodoChangeListener)
         }
     }
 
@@ -40,7 +42,7 @@ class TodoAdapter : ListAdapter<Todo, RecyclerView.ViewHolder>(
     }
 }
 
-class TodoViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
+class TodoViewHolder(parent: ViewGroup, private val onTodoChangeListener: OnTodoChangeListener?) : RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context).inflate(R.layout.item_todo, parent, false)
 ) {
 
@@ -49,6 +51,9 @@ class TodoViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
     fun bind(todo: Todo.Item) {
         checkbox.text = todo.memo
         checkbox.isChecked = todo.checked
+        checkbox.setOnClickListener { view ->
+            onTodoChangeListener?.onChange(Todo.Item(todo.id, todo.memo, !todo.checked, todo.createdAt))
+        }
     }
 
 }

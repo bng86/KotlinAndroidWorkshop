@@ -37,4 +37,16 @@ class TodoViewModel(private val repository: TodoItemRepository) : ViewModel() {
             repository.insertTodoItem(todoItem)
         }
     }
+
+    fun updateTodo(todo: Todo.Item) {
+        val todoItem = TodoItem(
+            title = todo.memo,
+            done = todo.checked,
+            createdAt = todo.createdAt
+        ).apply { id = todo.id }
+
+        viewModelScope.launch {
+            repository.updateTodoItem(todoItem)
+        }
+    }
 }

@@ -28,7 +28,20 @@ class TodoListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = TodoAdapter()
+        val todoItemDb = AppDatabase.getInstance(requireActivity().applicationContext)
+        val todoItemRepo = TodoItemRepository(todoItemDb)
+        val viewModelFactory = AnyViewModelFactory {
+            TodoViewModel(todoItemRepo)
+        }
+        val todoViewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(TodoViewModel::class.java)
+
+        val adapter = TodoAdapter().apply {
+            onTodoChangeListener = object : OnTodoChangeListener {
+                override fun onChange(todo: Todo.Item) {
+                    todoViewModel.updateTodo(todo)
+                }
+            }
+        }
         recyclerView.adapter = adapter
         recyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -38,13 +51,6 @@ class TodoListFragment : Fragment() {
                 LinearLayoutManager.VERTICAL
             )
         )
-
-        val todoItemDb = AppDatabase.getInstance(requireActivity().applicationContext)
-        val todoItemRepo = TodoItemRepository(todoItemDb)
-        val viewModelFactory = AnyViewModelFactory {
-            TodoViewModel(todoItemRepo)
-        }
-        val todoViewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(TodoViewModel::class.java)
 
         todoViewModel.todoLiveData.observe(viewLifecycleOwner, Observer { todos: List<Todo> ->
             adapter.submitList(todos)
