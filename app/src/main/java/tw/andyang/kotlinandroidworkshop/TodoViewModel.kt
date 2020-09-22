@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.launch
 import tw.andyang.kotlinandroidworkshop.database.TodoItem
 import tw.andyang.kotlinandroidworkshop.repository.TodoItemRepository
 import java.util.*
@@ -25,6 +26,8 @@ class TodoViewModel(private val repository: TodoItemRepository) : ViewModel() {
             done = false,
             createdAt = Date()
         )
-        repository.insertTodoItem(todoItem)
+        viewModelScope.launch {
+            repository.insertTodoItem(todoItem)
+        }
     }
 }
