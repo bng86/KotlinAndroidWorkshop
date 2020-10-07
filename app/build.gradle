@@ -64,4 +64,11 @@ dependencies {
     // optional - Test helpers
     testImplementation "androidx.room:room-testing:$room_version"
     /*** Room Dependencies End ***/
+
+    /*** Retrofit Dependencies Start ***/
+    // 會連帶引用 OkHttp，因此不必再 implementation
+    // 這裡使用最新版，若要支援舊版 Android 請注意使用的版本。
+    // 詳見：https://github.com/square/retrofit/blob/master/CHANGELOG.md
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    /*** Retrofit Dependencies End ***/
 }
